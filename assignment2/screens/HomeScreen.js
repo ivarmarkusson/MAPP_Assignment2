@@ -1,5 +1,12 @@
 import React from 'react';
-import { ScrollView, StyleSheet, Text, View, SectionList } from 'react-native';
+import {
+  ScrollView,
+  StyleSheet,
+  Text,
+  View,
+  SectionList,
+  TouchableOpacity,
+} from 'react-native';
 import _ from 'lodash';
 
 export default class HomeScreen extends React.Component {
@@ -14,13 +21,18 @@ export default class HomeScreen extends React.Component {
     let sectionSort = contacts.reduce((r, e) => {
       let title = e.name.first_name[0];
       if (!r[title]) {
-        r[title] = { title, data: [e.name.first_name] };
+        r[title] = {
+          title,
+          data: [e.name.first_name + ' ' + e.name.last_name],
+        };
       } else {
-        r[title].data.push(e.name.first_name);
+        r[title].data.push(e.name.first_name + ' ' + e.name.last_name);
       }
       return r;
     }, {});
 
+    sectionSort = _.sortBy(sectionSort, ['title', 'data']);
+    sectionSort.map(x => (x.data = _.sortBy(x.data)));
     let results = Object.values(sectionSort);
     return results;
   };
@@ -31,10 +43,18 @@ export default class HomeScreen extends React.Component {
     this.setState({ contacts: sortedData });
   }
 
-  /*  renderContacts = ({ item }) => {
-    return <Text>Contact Name</Text>;
+  /*renderContact = ({ item }) => {
+    return (
+      <TouchableOpacity onPress={this.onPress(item)}>
+        <Text>{item}</Text>
+      </TouchableOpacity>
+    );
+  };*/
+
+  onPress = contact => {
+    this.props.navigation.navigate('Info', contact);
   };
-*/
+
   render() {
     return (
       <View style={styles.container}>
@@ -43,11 +63,9 @@ export default class HomeScreen extends React.Component {
         </View>
         <ScrollView contentContainerStyle={styles.contentContainer}>
           <SectionList
-            renderItem={({ item, index, section }) => (
-              <Text key={index}>{item}</Text>
-            )}
+            renderItem={({ item, index, section }) => <Text>{item}</Text>}
             renderSectionHeader={({ section: { title } }) => (
-              <Text style={{ fontWeight: 'bold' }}>{title}</Text>
+              <Text style={styles.sectionHeader}>{title}</Text>
             )}
             sections={this.state.contacts}
             keyExtractor={(item, index) => item + index}
@@ -72,7 +90,12 @@ const styles = StyleSheet.create({
   headerText: {
     fontSize: 32,
   },
-  text: {
-    fontSize: 12,
+  SectionText: {
+    fontSize: 16,
+    padding: 5,
+  },
+  sectionHeader: {
+    fontSize: 20,
+    fontWeight: 'bold',
   },
 });
