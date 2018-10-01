@@ -15,6 +15,7 @@
   "parser": "babel-eslint",
   "plugins": ["react"],
   "rules": {
+    "react/prop-types": ["error", { "ignore": ["navigation"] }],
     "react/jsx-filename-extension": [
       1,
       {

@@ -1,35 +1,60 @@
-import React from "react";
+import React from 'react';
 import {
-  ScrollView,
-  StyleSheet,
-  Text,
-  View,
-  SectionList,
-  TouchableOpacity
-} from "react-native";
-import _ from "lodash";
+  ScrollView, StyleSheet, Text, View, SectionList, TouchableOpacity,
+} from 'react-native';
+import _ from 'lodash';
+
+const data = require('../data/ass2data.json');
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    padding: 16,
+    backgroundColor: '#fff',
+  },
+  contactListContainer: {
+    flex: 1,
+  },
+  header: {
+    alignItems: 'center',
+    padding: 10,
+  },
+  headerText: {
+    fontSize: 32,
+  },
+  sectionHeader: {
+    fontSize: 20,
+    padding: 10,
+    marginTop: 5,
+    marginBottom: 5,
+    backgroundColor: '#F5F5F5',
+  },
+  text: {
+    fontSize: 20,
+    paddingLeft: 10,
+  },
+});
 
 export default class HomeScreen extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      contacts: []
+      contacts: [],
     };
   }
 
   componentDidMount() {
-    const data = require("./../data/ass2data.json");
-    const sortedData = this.sortContacts(data);
-    this.setState({ contacts: sortedData });
+    this.setState({ contacts: this.getSortedContacts(data) });
   }
 
-  sortContacts = contacts => {
-    let sectionSort = contacts.reduce((acc, contact) => {
+  getSortedContacts = (contacts) => {
+    // Sectionize the contacts array
+    let sortedContacts = contacts.reduce((acc, contact) => {
       const key = contact.name.first_name[0];
       if (!(key in acc)) {
         acc[key] = {
           title: key,
-          data: []
+          data: [],
         };
       }
       acc[key].data.push({ contact });
@@ -37,21 +62,17 @@ export default class HomeScreen extends React.Component {
       return acc;
     }, {});
 
-    // Sort the letter titles: A B C D...
-    sectionSort = _.sortBy(sectionSort, ["title"]);
-    // Sort the data by first name: Abbott Abra...
-    sectionSort.map(
-      x =>
-        (x.data = _.sortBy(x.data, obj => {
-          return obj.contact.name.first_name;
-        }))
-    );
+    // Sort the section headers by letter
+    sortedContacts = _.sortBy(sortedContacts, ['title']);
 
-    return sectionSort;
+    // Sort the data by first_name
+    sortedContacts.map(x => _.sortBy(x.data, obj => obj.contact.name.first_name));
+
+    return sortedContacts;
   };
 
-  onPress = contact => {
-    this.props.navigation.navigate("Info", contact);
+  onPress = (contact) => {
+    this.props.navigation.navigate('Detail', contact);
   };
 
   renderItem = ({ item }) => {
@@ -64,6 +85,7 @@ export default class HomeScreen extends React.Component {
   };
 
   render() {
+    const { contacts } = this.state;
     return (
       <View style={styles.container}>
         <View style={styles.header}>
@@ -75,7 +97,7 @@ export default class HomeScreen extends React.Component {
             renderSectionHeader={({ section: { title } }) => (
               <Text style={styles.sectionHeader}>{title}</Text>
             )}
-            sections={this.state.contacts}
+            sections={contacts}
             keyExtractor={(item, index) => item + index}
           />
         </ScrollView>
@@ -83,32 +105,3 @@ export default class HomeScreen extends React.Component {
     );
   }
 }
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    padding: 16,
-    backgroundColor: "#fff"
-  },
-  contactListContainer: {
-    flex: 1
-  },
-  header: {
-    alignItems: "center",
-    padding: 10
-  },
-  headerText: {
-    fontSize: 32
-  },
-  sectionHeader: {
-    fontSize: 20,
-    padding: 10,
-    marginTop: 5,
-    marginBottom: 5,
-    backgroundColor: "#F5F5F5"
-  },
-  text: {
-    fontSize: 20,
-    paddingLeft: 10
-  }
-});

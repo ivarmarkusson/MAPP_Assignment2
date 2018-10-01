@@ -22,42 +22,39 @@ export default class InfoScreen extends React.Component {
   render() {
     const { homeFlag } = this.state;
     const { contact } = this.props.navigation.state.params;
-    const info = contact;
+    const { home, work, avatar } = contact;
+    const { first_name, last_name } = contact.name;
 
     if (homeFlag) {
       return (
         <View style={styles.container}>
-          <Image style={styles.avatar} source={{ uri: info.avatar }} />
-          <Text style={styles.name}>{`${contact.name.first_name} ${
-            contact.name.last_name
-          }`}</Text>
+          <Image style={styles.avatar} source={{ uri: avatar }} />
+          <Text style={styles.name}>{`${first_name} ${last_name}`}</Text>
           <TouchableOpacity style={styles.button} onPress={this.changeFlag}>
             <Text style={styles.buttonText}>Show work Info</Text>
           </TouchableOpacity>
           <View style={styles.infoContainer}>
-            <Text style={styles.text}>{info.home.address}</Text>
-            <Text style={styles.text}>{info.home.email}</Text>
-            <Text style={styles.text}>{info.home.phone_number}</Text>
+            <Text style={styles.text}>{home.address}</Text>
+            <Text style={styles.text}>{home.email}</Text>
+            <Text style={styles.text}>{home.phone_number}</Text>
           </View>
         </View>
       );
     }
     return (
       <View style={styles.container}>
-        <Image style={styles.avatar} source={{ uri: info.avatar }} />
-        <Text style={styles.name}>{`${info.name.first_name} ${
-          info.name.last_name
-        }`}</Text>
+        <Image style={styles.avatar} source={{ uri: avatar }} />
+        <Text style={styles.name}>{`${first_name} ${last_name}`}</Text>
         <TouchableOpacity style={styles.button} onPress={this.changeFlag}>
           <Text style={styles.buttonText}>Show home Info</Text>
         </TouchableOpacity>
         <View style={styles.infoContainer}>
-          <Text style={styles.text}>{info.work.address}</Text>
-          <Text style={styles.text}>{info.work.email}</Text>
-          <Text style={styles.text}>{info.work.phone_number}</Text>
-          <Text style={styles.text}>{info.work.company_name}</Text>
-          <Text style={styles.text}>{`${info.work.department}, ${
-            info.work.job_title
+          <Text style={styles.text}>{work.address}</Text>
+          <Text style={styles.text}>{work.email}</Text>
+          <Text style={styles.text}>{work.phone_number}</Text>
+          <Text style={styles.text}>{work.company_name}</Text>
+          <Text style={styles.text}>{`${work.department}, ${
+            work.job_title
           }`}</Text>
         </View>
       </View>
