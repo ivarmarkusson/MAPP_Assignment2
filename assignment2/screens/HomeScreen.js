@@ -64,11 +64,9 @@ export default class HomeScreen extends React.Component {
   };
 
   render() {
+    var loadingList = true;
     return (
       <View style={styles.container}>
-        <View style={styles.header}>
-          <Text style={styles.headerText}>SectionList</Text>
-        </View>
         <ScrollView contentContainerStyle={styles.contentContainer}>
           <SectionList
             renderItem={this.renderItem}
@@ -77,6 +75,12 @@ export default class HomeScreen extends React.Component {
             )}
             sections={this.state.contacts}
             keyExtractor={(item, index) => item + index}
+            ListHeaderComponent={
+              <View style={styles.header}>
+                <Text style={styles.headerText}>SectionList</Text>
+              </View>
+            }
+            ListFooterComponent={<Text> ...Loading or End reached </Text>}
           />
         </ScrollView>
       </View>
