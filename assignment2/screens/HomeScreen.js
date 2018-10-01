@@ -72,7 +72,8 @@ export default class HomeScreen extends React.Component {
   };
 
   onPress = (contact) => {
-    this.props.navigation.navigate('Detail', contact);
+    const { navigation } = this.props;
+    navigation.navigate('Detail', contact);
   };
 
   renderItem = ({ item }) => {
