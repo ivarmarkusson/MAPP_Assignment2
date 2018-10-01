@@ -1,69 +1,77 @@
-import React from 'react';
+import React from "react";
 import {
   ScrollView,
   StyleSheet,
   Text,
   View,
   SectionList,
-  TouchableOpacity,
-} from 'react-native';
-import _ from 'lodash';
+  TouchableOpacity
+} from "react-native";
+import _ from "lodash";
 
 export default class HomeScreen extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      contacts: [],
+      contacts: []
     };
   }
 
-  sortContacts = contacts => {
-    let sectionSort = contacts.reduce((r, e) => {
-      let title = e.name.first_name[0];
-      if (!r[title]) {
-        r[title] = {
-          title,
-          data: [e.name.first_name + ' ' + e.name.last_name],
-        };
-      } else {
-        r[title].data.push(e.name.first_name + ' ' + e.name.last_name);
-      }
-      return r;
-    }, {});
-
-    sectionSort = _.sortBy(sectionSort, ['title', 'data']);
-    sectionSort.map(x => (x.data = _.sortBy(x.data)));
-    let results = Object.values(sectionSort);
-    return results;
-  };
-
   componentDidMount() {
-    var data = require('./../data/ass2data.json');
-    var sortedData = this.sortContacts(data);
+    const data = require("./../data/ass2data.json");
+    const sortedData = this.sortContacts(data);
     this.setState({ contacts: sortedData });
   }
 
-  /*renderContact = ({ item }) => {
-    return (
-      <TouchableOpacity onPress={this.onPress(item)}>
-        <Text>{item}</Text>
-      </TouchableOpacity>
+  sortContacts = contacts => {
+    let sectionSort = contacts.reduce((acc, contact) => {
+      const key = contact.name.first_name[0];
+      if (!(key in acc)) {
+        acc[key] = {
+          title: key,
+          data: []
+        };
+      }
+      acc[key].data.push({ contact });
+
+      return acc;
+    }, {});
+
+    // Sort the letter titles: A B C D...
+    sectionSort = _.sortBy(sectionSort, ["title"]);
+    // Sort the data by first name: Abbott Abra...
+    sectionSort.map(
+      x =>
+        (x.data = _.sortBy(x.data, obj => {
+          return obj.contact.name.first_name;
+        }))
     );
-  };*/
+
+    return sectionSort;
+  };
 
   onPress = contact => {
-    this.props.navigation.navigate('Info', contact);
+    this.props.navigation.navigate("Info", contact);
+  };
+
+  renderItem = ({ item }) => {
+    const { first_name } = item.contact.name;
+    return (
+      <TouchableOpacity onPress={() => this.onPress(item)}>
+        <Text style={styles.text}>{first_name}</Text>
+      </TouchableOpacity>
+    );
   };
 
   render() {
     return (
       <View style={styles.container}>
         <View style={styles.header}>
-          <Text style={styles.headerText}>Section List</Text>
+          <Text style={styles.headerText}>SectionList</Text>
         </View>
         <ScrollView contentContainerStyle={styles.contentContainer}>
           <SectionList
-            renderItem={({ item, index, section }) => <Text>{item}</Text>}
+            renderItem={this.renderItem}
             renderSectionHeader={({ section: { title } }) => (
               <Text style={styles.sectionHeader}>{title}</Text>
             )}
@@ -79,23 +87,26 @@ export default class HomeScreen extends React.Component {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#fff',
+    backgroundColor: "#fff"
   },
   contactListContainer: {
-    flex: 1,
+    flex: 1
   },
   header: {
-    alignItems: 'center',
+    alignItems: "center"
   },
   headerText: {
-    fontSize: 32,
+    fontSize: 32
   },
   SectionText: {
     fontSize: 16,
-    padding: 5,
+    padding: 5
   },
   sectionHeader: {
     fontSize: 20,
-    fontWeight: 'bold',
+    fontWeight: "bold"
   },
+  text: {
+    fontSize: 18
+  }
 });
