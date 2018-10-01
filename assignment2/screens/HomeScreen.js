@@ -87,26 +87,28 @@ export default class HomeScreen extends React.Component {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
+    padding: 16,
     backgroundColor: "#fff"
   },
   contactListContainer: {
     flex: 1
   },
   header: {
-    alignItems: "center"
+    alignItems: "center",
+    padding: 10
   },
   headerText: {
     fontSize: 32
   },
-  SectionText: {
-    fontSize: 16,
-    padding: 5
-  },
   sectionHeader: {
     fontSize: 20,
-    fontWeight: "bold"
+    padding: 10,
+    marginTop: 5,
+    marginBottom: 5,
+    backgroundColor: "#F5F5F5"
   },
   text: {
-    fontSize: 18
+    fontSize: 20,
+    paddingLeft: 10
   }
 });
