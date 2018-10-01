@@ -44,7 +44,7 @@ const styles = StyleSheet.create({
   },
 });
 
-export default class InfoScreen extends React.Component {
+export default class DetailScreen extends React.Component {
   constructor(props) {
     super(props);
 
