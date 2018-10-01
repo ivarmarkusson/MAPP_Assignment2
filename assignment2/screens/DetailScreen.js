@@ -20,7 +20,6 @@ export default class InfoScreen extends React.Component {
   };
 
   render() {
-    const { homeFlag } = this.state;
     const { contact } = this.props.navigation.state.params;
     const info = contact;
 
@@ -31,7 +30,9 @@ export default class InfoScreen extends React.Component {
           contact.name.last_name
         }`}</Text>
         <TouchableOpacity style={styles.button} onPress={this.changeFlag}>
-          <Text style={styles.buttonText}>Show work Info</Text>
+          <Text style={styles.buttonText}>
+            Show {this.state.homeFlag ? 'work' : 'home'} Info
+          </Text>
         </TouchableOpacity>
         {this.state.homeFlag ? (
           <View style={styles.infoContainer}>
@@ -60,7 +61,6 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: '#fff',
     alignItems: 'center',
-    justifyContent: 'center',
   },
   infoContainer: {
     width: '80%',
