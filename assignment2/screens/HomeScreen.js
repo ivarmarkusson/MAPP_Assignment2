@@ -1,24 +1,24 @@
-import React from "react";
+import React from 'react';
 import {
   ScrollView,
   StyleSheet,
   Text,
   View,
   SectionList,
-  TouchableOpacity
-} from "react-native";
-import _ from "lodash";
+  TouchableOpacity,
+} from 'react-native';
+import _ from 'lodash';
 
 export default class HomeScreen extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      contacts: []
+      contacts: [],
     };
   }
 
   componentDidMount() {
-    const data = require("./../data/ass2data.json");
+    const data = require('./../data/ass2data.json');
     const sortedData = this.sortContacts(data);
     this.setState({ contacts: sortedData });
   }
@@ -29,7 +29,7 @@ export default class HomeScreen extends React.Component {
       if (!(key in acc)) {
         acc[key] = {
           title: key,
-          data: []
+          data: [],
         };
       }
       acc[key].data.push({ contact });
@@ -38,7 +38,7 @@ export default class HomeScreen extends React.Component {
     }, {});
 
     // Sort the letter titles: A B C D...
-    sectionSort = _.sortBy(sectionSort, ["title"]);
+    sectionSort = _.sortBy(sectionSort, ['title']);
     // Sort the data by first name: Abbott Abra...
     sectionSort.map(
       x =>
@@ -51,7 +51,7 @@ export default class HomeScreen extends React.Component {
   };
 
   onPress = contact => {
-    this.props.navigation.navigate("Info", contact);
+    this.props.navigation.navigate('Detail', contact);
   };
 
   renderItem = ({ item }) => {
@@ -88,27 +88,27 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     padding: 16,
-    backgroundColor: "#fff"
+    backgroundColor: '#fff',
   },
   contactListContainer: {
-    flex: 1
+    flex: 1,
   },
   header: {
-    alignItems: "center",
-    padding: 10
+    alignItems: 'center',
+    padding: 10,
   },
   headerText: {
-    fontSize: 32
+    fontSize: 32,
   },
   sectionHeader: {
     fontSize: 20,
     padding: 10,
     marginTop: 5,
     marginBottom: 5,
-    backgroundColor: "#F5F5F5"
+    backgroundColor: '#F5F5F5',
   },
   text: {
     fontSize: 20,
-    paddingLeft: 10
-  }
+    paddingLeft: 10,
+  },
 });
