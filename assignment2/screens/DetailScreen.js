@@ -1,66 +1,14 @@
 import React from 'react';
-import { StyleSheet, Text, View, TouchableOpacity, Image } from 'react-native';
-
-export default class InfoScreen extends React.Component {
-  constructor(props) {
-    super(props);
-
-    this.state = {
-      homeFlag: true,
-    };
-  }
-
-  changeFlag = () => {
-    const { homeFlag } = this.state;
-    if (homeFlag) {
-      this.setState({ homeFlag: false });
-    } else {
-      this.setState({ homeFlag: true });
-    }
-  };
-
-  render() {
-    const { contact } = this.props.navigation.state.params;
-    const info = contact;
-
-    return (
-      <View style={styles.container}>
-        <Image style={styles.avatar} source={{ uri: info.avatar }} />
-        <Text style={styles.name}>{`${contact.name.first_name} ${
-          contact.name.last_name
-        }`}</Text>
-        <TouchableOpacity style={styles.button} onPress={this.changeFlag}>
-          <Text style={styles.buttonText}>
-            Show {this.state.homeFlag ? 'work' : 'home'} Info
-          </Text>
-        </TouchableOpacity>
-        {this.state.homeFlag ? (
-          <View style={styles.infoContainer}>
-            <Text style={styles.text}>{info.home.address}</Text>
-            <Text style={styles.text}>{info.home.email}</Text>
-            <Text style={styles.text}>{info.home.phone_number}</Text>
-          </View>
-        ) : (
-          <View style={styles.infoContainer}>
-            <Text style={styles.text}>{info.work.address}</Text>
-            <Text style={styles.text}>{info.work.email}</Text>
-            <Text style={styles.text}>{info.work.phone_number}</Text>
-            <Text style={styles.text}>{info.work.company_name}</Text>
-            <Text style={styles.text}>{`${info.work.department}, ${
-              info.work.job_title
-            }`}</Text>
-          </View>
-        )}
-      </View>
-    );
-  }
-}
+import {
+  StyleSheet, Text, View, TouchableOpacity, Image,
+} from 'react-native';
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: '#fff',
     alignItems: 'center',
+    justifyContent: 'center',
   },
   infoContainer: {
     width: '80%',
@@ -95,3 +43,65 @@ const styles = StyleSheet.create({
     height: 160,
   },
 });
+
+export default class DetailScreen extends React.Component {
+  constructor(props) {
+    super(props);
+
+    this.state = {
+      homeFlag: true,
+    };
+  }
+
+  changeFlag = () => {
+    const { homeFlag } = this.state;
+    if (homeFlag) {
+      this.setState({ homeFlag: false });
+    } else {
+      this.setState({ homeFlag: true });
+    }
+  };
+
+  render() {
+    const { navigation } = this.props;
+    const { homeFlag } = this.state;
+    const { contact } = navigation.state.params;
+    const { home, work, avatar } = contact;
+    const firstName = contact.name.first_name;
+    const lastName = contact.name.last_name;
+    const fullName = `${firstName} ${lastName}`;
+
+    if (homeFlag) {
+      return (
+        <View style={styles.container}>
+          <Image style={styles.avatar} source={{ uri: avatar }} />
+          <Text style={styles.name}>{`${fullName}`}</Text>
+          <TouchableOpacity style={styles.button} onPress={this.changeFlag}>
+            <Text style={styles.buttonText}>Show work Info</Text>
+          </TouchableOpacity>
+          <View style={styles.infoContainer}>
+            <Text style={styles.text}>{home.address}</Text>
+            <Text style={styles.text}>{home.email}</Text>
+            <Text style={styles.text}>{home.phone_number}</Text>
+          </View>
+        </View>
+      );
+    }
+    return (
+      <View style={styles.container}>
+        <Image style={styles.avatar} source={{ uri: avatar }} />
+        <Text style={styles.name}>{`${fullName}`}</Text>
+        <TouchableOpacity style={styles.button} onPress={this.changeFlag}>
+          <Text style={styles.buttonText}>Show home Info</Text>
+        </TouchableOpacity>
+        <View style={styles.infoContainer}>
+          <Text style={styles.text}>{work.address}</Text>
+          <Text style={styles.text}>{work.email}</Text>
+          <Text style={styles.text}>{work.phone_number}</Text>
+          <Text style={styles.text}>{work.company_name}</Text>
+          <Text style={styles.text}>{`${work.department}, ${work.job_title}`}</Text>
+        </View>
+      </View>
+    );
+  }
+}
