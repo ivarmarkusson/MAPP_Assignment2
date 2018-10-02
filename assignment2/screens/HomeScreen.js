@@ -103,22 +103,23 @@ export default class HomeScreen extends React.Component {
 
   // Deletes contact from state not json file
   deleteButton = contact => {
-    const index = _.findIndex(this.state.contacts, {
-      data: [
-        {
-          contact: {
-            id: contact.id,
-          },
-        },
-      ],
+    const sectionIndex = _.findIndex(this.state.contacts, {
+      title: contact.name.first_name[0],
+    });
+    const index = _.findIndex(this.state.contacts[sectionIndex].data, {
+      contact: {
+        id: contact.id,
+      },
     });
 
+    console.log(index);
+    console.log(sectionIndex);
     return [
       <TouchableOpacity
         style={{ backgroundColor: 'red' }}
         onPress={() => {
           var array = [...this.state.contacts];
-          array.splice(index, 1);
+          array[sectionIndex].data.splice(index, 1);
           this.setState({
             contacts: array,
           });
