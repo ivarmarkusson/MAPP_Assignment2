@@ -8,8 +8,15 @@ import {
   TouchableOpacity,
 } from 'react-native';
 import _ from 'lodash';
+import Swipeable from 'react-native-swipeable';
 
 const data = require('../data/ass2data.json');
+
+const rightButtons = [
+  <TouchableOpacity>
+    <Text>Delete</Text>
+  </TouchableOpacity>,
+];
 
 const styles = StyleSheet.create({
   container: {
@@ -88,9 +95,11 @@ export default class HomeScreen extends React.Component {
     const lastName = item.contact.name.last_name;
     const fullName = `${firstName} ${lastName}`;
     return (
-      <TouchableOpacity onPress={() => this.onPress(item)}>
-        <Text style={styles.text}>{fullName}</Text>
-      </TouchableOpacity>
+      <Swipeable rightButtons={rightButtons}>
+        <TouchableOpacity onPress={() => this.onPress(item)}>
+          <Text style={styles.text}>{fullName}</Text>
+        </TouchableOpacity>
+      </Swipeable>
     );
   };
 
