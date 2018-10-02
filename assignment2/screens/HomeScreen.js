@@ -55,6 +55,7 @@ export default class HomeScreen extends React.Component {
 
   getSortedContacts = contacts => {
     // Sectionize the contacts array
+    var id = 0;
     let sortedContacts = contacts.reduce((acc, contact) => {
       const key = contact.name.first_name[0];
       if (!(key in acc)) {
@@ -63,8 +64,11 @@ export default class HomeScreen extends React.Component {
           data: [],
         };
       }
-      acc[key].data.push({ contact });
 
+      //Insert unique identidy to find index(can be used to index corresponding item in json file for modifycations)
+      contact.id = id;
+      id++;
+      acc[key].data.push({ contact });
       return acc;
     }, {});
 
@@ -97,26 +101,26 @@ export default class HomeScreen extends React.Component {
     );
   };
 
+  // Deletes contact from state not json file
   deleteButton = contact => {
-    console.log('contact: ', contact);
-    console.log('contacts: ', this.state.contacts);
     const index = _.findIndex(this.state.contacts, {
-      data: {
-        contact: {
-          name: {
-            first_name: contact.name.first_name,
-            last_name: contact.name.last_name,
+      data: [
+        {
+          contact: {
+            id: contact.id,
           },
         },
-      },
+      ],
     });
-    console.log(index);
+
     return [
       <TouchableOpacity
         style={{ backgroundColor: 'red' }}
         onPress={() => {
+          var array = [...this.state.contacts];
+          array.splice(index, 1);
           this.setState({
-            contacts: this.state.contacts.splice(index, 1),
+            contacts: array,
           });
         }}
       >
