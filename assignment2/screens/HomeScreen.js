@@ -1,10 +1,14 @@
 import React from 'react';
 import {
-  ScrollView, StyleSheet, Text, View, SectionList, TouchableOpacity,
+  ScrollView, StyleSheet, View, SectionList, Text, TouchableOpacity,
 } from 'react-native';
 import _ from 'lodash';
+import Header from '../components/Header';
+import SectionHeader from '../components/SectionHeader';
+import SectionItem from '../components/SectionItem';
+import wholeData from '../data/ass2data.json';
 
-const data = require('../data/ass2data.json');
+const data = wholeData.splice(0, 100);
 
 const styles = StyleSheet.create({
   container: {
@@ -12,42 +16,22 @@ const styles = StyleSheet.create({
     padding: 16,
     backgroundColor: '#fff',
   },
-  contactListContainer: {
-    flex: 1,
-  },
-  header: {
-    alignItems: 'center',
-    padding: 10,
-  },
-  headerText: {
-    fontSize: 32,
-  },
-  sectionHeader: {
-    fontSize: 20,
-    padding: 10,
-    marginTop: 5,
-    marginBottom: 5,
-    backgroundColor: '#F5F5F5',
-  },
-  text: {
-    fontSize: 20,
-    paddingLeft: 10,
-  },
 });
 
 export default class HomeScreen extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
+      sortFlag: false,
       contacts: [],
     };
   }
 
   componentDidMount() {
-    this.setState({ contacts: this.getSortedContacts(data) });
+    this.setState({ contacts: this.getContacts(data) });
   }
 
-  getSortedContacts = (contacts) => {
+  getContacts = (contacts) => {
     // Sectionize the contacts array
     let sortedContacts = contacts.reduce((acc, contact) => {
       const key = contact.name.first_name[0];
@@ -61,53 +45,64 @@ export default class HomeScreen extends React.Component {
 
       return acc;
     }, {});
-
     // Sort the section headers by letter
     sortedContacts = _.sortBy(sortedContacts, ['title']);
-
-    // Sort each data array by first_name
-    sortedContacts.map(x => _.sortBy(x.data, obj => obj.contact.name.first_name));
-
+    // Sort each data array by first name
+    sortedContacts = this.sortContactsByFirst(sortedContacts);
     return sortedContacts;
   };
 
-  onPress = (contact) => {
-    const { navigation } = this.props;
-    navigation.navigate('Detail', contact);
+  // Sort each data array in contacts by first name
+  sortContactsByFirst = (contacts) => {
+    const sortedContacts = contacts.map((x) => {
+      const rObj = { title: x.title };
+      rObj.data = _.sortBy(x.data, obj => obj.contact.name.first_name);
+      return rObj;
+    });
+    return sortedContacts;
   };
 
-  renderItem = ({ item }) => {
-    const firstName = item.contact.name.first_name;
-    const lastName = item.contact.name.last_name;
-    const fullName = `${firstName} ${lastName}`;
-    return (
-      <TouchableOpacity onPress={() => this.onPress(item)}>
-        <Text style={styles.text}>{fullName}</Text>
-      </TouchableOpacity>
-    );
+  // Sort each data array in contacts by last name
+  sortContactsByLast = (contacts) => {
+    const sortedContacts = contacts.map((x) => {
+      const rObj = { title: x.title };
+      rObj.data = _.sortBy(x.data, obj => obj.contact.name.last_name);
+      return rObj;
+    });
+    return sortedContacts;
   };
 
-  renderSectionHeader = ({ section: { title } }) => (
-    <Text style={styles.sectionHeader}>{title}</Text>
-  );
+  toggleSort = () => {
+    const { sortFlag, contacts } = this.state;
+    if (sortFlag) {
+      this.setState({ sortFlag: false });
+      this.setState({ contacts: this.sortContactsByFirst(contacts) });
+    } else {
+      this.setState({ sortFlag: true });
+      this.setState({ contacts: this.sortContactsByLast(contacts) });
+    }
+  };
+
+  renderItem = ({ item }) => <SectionItem item={item} navigation={this.props.navigation} />;
+
+  renderSectionHeader = ({ section: { title } }) => <SectionHeader title={title} />;
 
   render() {
-    // const loadingList = true; <-- not used
-    const { contacts } = this.state;
+    const { contacts, sortFlag } = this.state;
+    const headerText = 'Phone book';
+    const toggleText = sortFlag ? 'Sort by first name' : 'Sort by last name';
     return (
       <View style={styles.container}>
-        <ScrollView contentContainerStyle={styles.contentContainer}>
+        <Header text={headerText} />
+        <TouchableOpacity style={styles.button} onPress={this.toggleSort}>
+          <Text style={styles.buttonText}>{toggleText}</Text>
+        </TouchableOpacity>
+        <ScrollView>
           <SectionList
             renderItem={this.renderItem}
             renderSectionHeader={this.renderSectionHeader}
             sections={contacts}
             keyExtractor={(item, index) => item + index}
-            ListHeaderComponent={(
-              <View style={styles.header}>
-                <Text style={styles.headerText}>SectionList</Text>
-              </View>
-)}
-            ListFooterComponent={<Text> ...Loading or End reached </Text>}
           />
         </ScrollView>
       </View>
