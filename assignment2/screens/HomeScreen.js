@@ -1,6 +1,11 @@
 import React from 'react';
 import {
-  ScrollView, StyleSheet, Text, View, SectionList, TouchableOpacity,
+  ScrollView,
+  StyleSheet,
+  Text,
+  View,
+  SectionList,
+  TouchableOpacity,
 } from 'react-native';
 import _ from 'lodash';
 
@@ -47,7 +52,7 @@ export default class HomeScreen extends React.Component {
     this.setState({ contacts: this.getSortedContacts(data) });
   }
 
-  getSortedContacts = (contacts) => {
+  getSortedContacts = contacts => {
     // Sectionize the contacts array
     let sortedContacts = contacts.reduce((acc, contact) => {
       const key = contact.name.first_name[0];
@@ -66,12 +71,14 @@ export default class HomeScreen extends React.Component {
     sortedContacts = _.sortBy(sortedContacts, ['title']);
 
     // Sort each data array by first_name
-    sortedContacts.map(x => _.sortBy(x.data, obj => obj.contact.name.first_name));
+    sortedContacts.map(x =>
+      _.sortBy(x.data, obj => obj.contact.name.first_name)
+    );
 
     return sortedContacts;
   };
 
-  onPress = (contact) => {
+  onPress = contact => {
     const { navigation } = this.props;
     navigation.navigate('Detail', contact);
   };
@@ -92,22 +99,18 @@ export default class HomeScreen extends React.Component {
   );
 
   render() {
-    // const loadingList = true; <-- not used
     const { contacts } = this.state;
     return (
       <View style={styles.container}>
+        <View style={styles.header}>
+          <Text style={styles.headerText}>Phonebook</Text>
+        </View>
         <ScrollView contentContainerStyle={styles.contentContainer}>
           <SectionList
             renderItem={this.renderItem}
             renderSectionHeader={this.renderSectionHeader}
             sections={contacts}
             keyExtractor={(item, index) => item + index}
-            ListHeaderComponent={(
-              <View style={styles.header}>
-                <Text style={styles.headerText}>SectionList</Text>
-              </View>
-)}
-            ListFooterComponent={<Text> ...Loading or End reached </Text>}
           />
         </ScrollView>
       </View>

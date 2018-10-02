@@ -1,14 +1,11 @@
 import React from 'react';
-import {
-  StyleSheet, Text, View, TouchableOpacity, Image,
-} from 'react-native';
+import { StyleSheet, Text, View, TouchableOpacity, Image } from 'react-native';
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: '#fff',
     alignItems: 'center',
-    justifyContent: 'center',
   },
   infoContainer: {
     width: '80%',
@@ -99,7 +96,9 @@ export default class DetailScreen extends React.Component {
           <Text style={styles.text}>{work.email}</Text>
           <Text style={styles.text}>{work.phone_number}</Text>
           <Text style={styles.text}>{work.company_name}</Text>
-          <Text style={styles.text}>{`${work.department}, ${work.job_title}`}</Text>
+          <Text style={styles.text}>{`${work.department}, ${
+            work.job_title
+          }`}</Text>
         </View>
       </View>
     );
