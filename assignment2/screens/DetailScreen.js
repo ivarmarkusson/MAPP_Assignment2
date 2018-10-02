@@ -67,13 +67,15 @@ export default class DetailScreen extends React.Component {
     const { homeFlag } = this.state;
     const { contact } = navigation.state.params;
     const { home, work, avatar } = contact;
-    const { first_name, last_name } = contact.name;
+    const firstName = contact.name.first_name;
+    const lastName = contact.name.last_name;
+    const fullName = `${firstName} ${lastName}`;
 
     if (homeFlag) {
       return (
         <View style={styles.container}>
           <Image style={styles.avatar} source={{ uri: avatar }} />
-          <Text style={styles.name}>{`${first_name} ${last_name}`}</Text>
+          <Text style={styles.name}>{`${fullName}`}</Text>
           <TouchableOpacity style={styles.button} onPress={this.changeFlag}>
             <Text style={styles.buttonText}>Show work Info</Text>
           </TouchableOpacity>
@@ -88,7 +90,7 @@ export default class DetailScreen extends React.Component {
     return (
       <View style={styles.container}>
         <Image style={styles.avatar} source={{ uri: avatar }} />
-        <Text style={styles.name}>{`${first_name} ${last_name}`}</Text>
+        <Text style={styles.name}>{`${fullName}`}</Text>
         <TouchableOpacity style={styles.button} onPress={this.changeFlag}>
           <Text style={styles.buttonText}>Show home Info</Text>
         </TouchableOpacity>

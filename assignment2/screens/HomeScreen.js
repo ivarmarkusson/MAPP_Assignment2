@@ -65,7 +65,7 @@ export default class HomeScreen extends React.Component {
     // Sort the section headers by letter
     sortedContacts = _.sortBy(sortedContacts, ['title']);
 
-    // Sort the data by first_name
+    // Sort each data array by first_name
     sortedContacts.map(x => _.sortBy(x.data, obj => obj.contact.name.first_name));
 
     return sortedContacts;
@@ -77,13 +77,21 @@ export default class HomeScreen extends React.Component {
   };
 
   renderItem = ({ item }) => {
-    const { first_name } = item.contact.name;
+    const firstName = item.contact.name.first_name;
+    const lastName = item.contact.name.last_name;
+    const fullName = `${firstName} ${lastName}`;
     return (
       <TouchableOpacity onPress={() => this.onPress(item)}>
-        <Text style={styles.text}>{first_name}</Text>
+        <Text style={styles.text}>{fullName}</Text>
       </TouchableOpacity>
     );
   };
+
+  renderSectionHeader = ({ section: { title } }) => {
+    return (
+      <Text style={styles.sectionHeader}>{title}</Text>
+    );
+  }
 
   render() {
     const { contacts } = this.state;
@@ -95,9 +103,7 @@ export default class HomeScreen extends React.Component {
         <ScrollView contentContainerStyle={styles.contentContainer}>
           <SectionList
             renderItem={this.renderItem}
-            renderSectionHeader={({ section: { title } }) => (
-              <Text style={styles.sectionHeader}>{title}</Text>
-            )}
+            renderSectionHeader={this.renderSectionHeader}
             sections={contacts}
             keyExtractor={(item, index) => item + index}
           />
